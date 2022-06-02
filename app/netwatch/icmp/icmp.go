@@ -1,6 +1,7 @@
 package icmp
 
 import (
+	"crypto/rand"
 	"fmt"
 	"os"
 
@@ -8,14 +9,17 @@ import (
 	"golang.org/x/net/ipv4"
 )
 
-func ICMP() {
+func ICMP(task Task) {
+	token := make([]byte, 16)
+	rand.Read(token)
+
 	msg := icmp.Message{
 		Type: ipv4.ICMPTypeEcho,
 		Code: 0,
 		Body: &icmp.Echo{
 			ID:   os.Getpid() & 0xffff,
 			Seq:  1,
-			Data: []byte("HELLO-R-U-THERE"),
+			Data: token,
 		},
 	}
 
