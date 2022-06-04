@@ -1,4 +1,4 @@
-package icmp
+package netwatch
 
 import (
 	"crypto/rand"
