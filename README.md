@@ -9,5 +9,6 @@
   * [ ] DHCPv6 Server
 * [ ] VPN
   * [ ] WireGuard
-* [ ] Firewall
-  * [ ] nftables
+* [ ] Firewall (nftables)
+  * [ ] Rules
+  * [ ] Set
