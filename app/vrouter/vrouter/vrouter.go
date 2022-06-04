@@ -9,11 +9,13 @@ import (
 	"time"
 
 	"github.com/vitalvas/cloudrouter/app/vrouter/config"
+	"github.com/vitalvas/cloudrouter/app/vrouter/wireguard"
 )
 
 type VRouter struct {
-	config   *config.Config
-	shutdown bool
+	config    *config.Config
+	wireguard *wireguard.Wireguard
+	shutdown  bool
 }
 
 func NewVRouter() *VRouter {
@@ -30,6 +32,15 @@ func NewVRouter() *VRouter {
 }
 
 func (this *VRouter) Execute() {
+	var err error
+
+	this.wireguard, err = wireguard.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	this.wireguard.SetDevices(this.config.VPN.WireGuard)
+
 	go this.background()
 
 	log.Println("started")
@@ -42,12 +53,14 @@ func (this *VRouter) Execute() {
 	log.Println("Shutdown signal received")
 
 	this.saveConfig()
+	this.wireguard.Shutdown()
 }
 
 func (this *VRouter) background() {
 	for {
-		time.Sleep(time.Second)
-
 		this.ApplySysctl()
+		this.wireguard.SyncConfig()
+
+		time.Sleep(10 * time.Second)
 	}
 }
