@@ -3,7 +3,7 @@
 ## Roadmap
 
 * [ ] System
-  * [ ] Unified transaction config
+  * [x] Unified transaction config
 * [ ] DHCP
   * [ ] DHCPv4 Server
   * [ ] DHCPv6 Server

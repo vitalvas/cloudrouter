@@ -6,7 +6,7 @@ import (
 	"encoding/gob"
 )
 
-func Marshal(conf Config) ([]byte, error) {
+func Marshal(conf *Config) ([]byte, error) {
 	var data bytes.Buffer
 
 	if err := gob.NewEncoder(&data).Encode(conf); err != nil {
@@ -28,4 +28,17 @@ func Marshal(conf Config) ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
+}
+
+func Unmarshal(data []byte) (*Config, error) {
+	conf := &Config{}
+
+	zr := flate.NewReader(bytes.NewReader(data))
+	defer zr.Close()
+
+	if err := gob.NewDecoder(zr).Decode(&conf); err != nil {
+		return nil, err
+	}
+
+	return conf, nil
 }

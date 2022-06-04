@@ -2,8 +2,8 @@ package config
 
 import "time"
 
-func NewConfig() Config {
-	return Config{
+func NewConfig() *Config {
+	return &Config{
 		ID: time.Now().Unix(),
 	}
 }

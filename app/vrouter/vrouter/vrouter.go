@@ -12,25 +12,27 @@ import (
 )
 
 type VRouter struct {
-	config   config.Config
+	config   *config.Config
 	shutdown bool
 }
 
 func NewVRouter() *VRouter {
-	return &VRouter{}
+	this := &VRouter{}
+
+	var err error
+
+	this.config, err = LoadOrCreateConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return this
 }
 
 func (this *VRouter) Execute() {
-	this.config = config.NewConfig()
-
-	// data, err := config.Marshal(this.config)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// config.PackFile(this.config.ID, data)
-
 	go this.background()
+
+	log.Println("started")
 
 	notifyCtx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
@@ -38,6 +40,8 @@ func (this *VRouter) Execute() {
 	<-notifyCtx.Done()
 
 	log.Println("Shutdown signal received")
+
+	this.saveConfig()
 }
 
 func (this *VRouter) background() {
