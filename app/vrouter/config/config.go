@@ -4,7 +4,6 @@ type Config struct {
 	ID       int64
 	System   System
 	Security Security
-	VPN      VPN
 }
 
 type System struct {
@@ -33,14 +32,4 @@ const AddressTypeIPv6 AddressType = 6
 type AddressSet struct {
 	Type    AddressType
 	Address string
-}
-
-type VPN struct {
-	WireGuard []WireGuard
-}
-
-type WireGuard struct {
-	DeviceName string
-	PrivateKey string
-	ListenPort int
 }

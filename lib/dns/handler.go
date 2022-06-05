@@ -1,6 +1,8 @@
 package dns
 
-import "github.com/miekg/dns"
+import (
+	"github.com/miekg/dns"
+)
 
 func (this *Server) handleRequest(w dns.ResponseWriter, r *dns.Msg) {
 	for idx, u := range this.upstreams() {

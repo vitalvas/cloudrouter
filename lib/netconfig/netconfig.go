@@ -8,4 +8,8 @@ func Apply() {
 	if err := applySysctl(); err != nil {
 		log.Println("sysctl:", err)
 	}
+
+	if err := applyWireGuard(); err != nil {
+		log.Println("wireguard:", err)
+	}
 }
