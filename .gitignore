@@ -1,3 +1,2 @@
-app-*
 cloudrouter-*
-app/vrouter/tmp/*
+bin/*
