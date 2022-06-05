@@ -1,4 +1,4 @@
-package netconfig
+package main
 
 import (
 	"os"
