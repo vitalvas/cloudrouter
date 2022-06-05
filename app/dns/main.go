@@ -8,6 +8,7 @@ import (
 
 	miekgdns "github.com/miekg/dns"
 	"github.com/vitalvas/cloudrouter/lib/dns"
+	"github.com/vitalvas/cloudrouter/lib/general"
 	"github.com/vitalvas/cloudrouter/lib/logger"
 	"github.com/vitalvas/cloudrouter/lib/multilisten"
 )
@@ -28,7 +29,10 @@ func (a *listenerAdapter) Close() error {
 }
 
 func updateListeners(mux *miekgdns.ServeMux) error {
-	addrs := []string{"127.0.0.1"}
+	addrs, err := general.PrivateInterfaceAddrs()
+	if err != nil {
+		return err
+	}
 
 	dnsUDPListeners.ListenAndServe(addrs, func(host string) multilisten.Listener {
 		return &listenerAdapter{&miekgdns.Server{
