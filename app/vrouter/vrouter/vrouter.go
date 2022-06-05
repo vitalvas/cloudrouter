@@ -58,7 +58,6 @@ func (this *VRouter) Execute() {
 
 func (this *VRouter) background() {
 	for {
-		this.ApplySysctl()
 		this.wireguard.SyncConfig()
 
 		time.Sleep(10 * time.Second)
