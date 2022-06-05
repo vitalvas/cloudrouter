@@ -4,7 +4,14 @@ import "github.com/vitalvas/cloudrouter/lib/logger"
 
 var log = logger.NewConsole()
 
-func Apply() {
+type NetConfig struct {
+}
+
+func NewNetConfig() *NetConfig {
+	return &NetConfig{}
+}
+
+func (this *NetConfig) Apply() {
 	if err := applySysctl(); err != nil {
 		log.Println("sysctl:", err)
 	}

@@ -1,14 +1,10 @@
 # CloudRouter
 
-## Roadmap
+## Services
 
-* [ ] System
-  * [x] Unified transaction config
-* [ ] DHCP
-  * [ ] DHCPv4 Server
-  * [ ] DHCPv6 Server
-* [ ] VPN
-  * [ ] WireGuard
-* [ ] Firewall (nftables)
-  * [ ] Rules
-  * [ ] Set
+* [X] DNS Proxy
+  * [X] Static upstream
+  * [ ] Cache
+  * [ ] DNS over HTTPS
+  * [ ] DNS over TLS
+  * [ ] DNS over QUIC
