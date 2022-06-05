@@ -2,6 +2,7 @@ package multilisten
 
 import (
 	"sync"
+	"time"
 
 	"github.com/vitalvas/cloudrouter/lib/logger"
 )
@@ -14,13 +15,16 @@ type Listener interface {
 }
 
 type Pool struct {
-	lock      sync.Mutex
-	listeners map[string]Listener
+	lock         sync.Mutex
+	listeners    map[string]Listener
+	shutdown     bool
+	RestartDelay time.Duration
 }
 
 func NewPool() *Pool {
 	return &Pool{
-		listeners: make(map[string]Listener),
+		listeners:    make(map[string]Listener),
+		RestartDelay: time.Second,
 	}
 }
 
@@ -44,8 +48,12 @@ func (this *Pool) ListenAndServe(hosts []string, listenerFor func(host string) L
 			this.listeners[host] = ln
 
 			go func(host string, ln Listener) {
-				if err := ln.ListenAndServe(); err != nil {
-					log.Printf("listener for %q died: %v", host, err)
+				for !this.shutdown {
+					if err := ln.ListenAndServe(); err != nil {
+						log.Printf("listener for %q died: %v", host, err)
+					}
+
+					time.Sleep(this.RestartDelay)
 				}
 
 				this.lock.Lock()
@@ -65,6 +73,8 @@ func (this *Pool) ListenAndServe(hosts []string, listenerFor func(host string) L
 }
 
 func (this *Pool) Close() {
+	this.shutdown = true
+
 	for host := range this.listeners {
 		this.listeners[host].Close()
 	}
