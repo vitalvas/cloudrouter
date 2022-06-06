@@ -5,11 +5,6 @@ import (
 	"golang.zx2c4.com/wireguard/wgctrl"
 )
 
-func applyWireGuard() error {
-
-	return nil
-}
-
 type Wireguard struct {
 	client  *wgctrl.Client
 	devices []WireGuardDevice
@@ -21,7 +16,7 @@ type WireGuardDevice struct {
 	ListenPort int
 }
 
-func New() (*Wireguard, error) {
+func NewWireguard() (*Wireguard, error) {
 	this := &Wireguard{}
 
 	var err error
@@ -42,7 +37,7 @@ func (this *Wireguard) Shutdown() {
 	this.client.Close()
 }
 
-func (this *Wireguard) SyncConfig() {
+func (this *Wireguard) applyWireGuard() error {
 	devs, err := this.client.Devices()
 	if err != nil {
 		log.Fatal(err)
@@ -68,12 +63,13 @@ func (this *Wireguard) SyncConfig() {
 
 		link, err := netlink.LinkByName(row)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
 		if err := netlink.LinkDel(link); err != nil {
-			log.Fatal(err)
+			return err
 		}
 	}
 
+	return nil
 }

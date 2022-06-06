@@ -5,10 +5,19 @@ import "github.com/vitalvas/cloudrouter/lib/logger"
 var log = logger.NewConsole()
 
 type NetConfig struct {
+	wireguard *Wireguard
 }
 
 func NewNetConfig() *NetConfig {
-	return &NetConfig{}
+	this := &NetConfig{}
+
+	var err error
+	this.wireguard, err = NewWireguard()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return this
 }
 
 func (this *NetConfig) Apply() {
@@ -16,7 +25,7 @@ func (this *NetConfig) Apply() {
 		log.Println("sysctl:", err)
 	}
 
-	if err := applyWireGuard(); err != nil {
+	if err := this.wireguard.applyWireGuard(); err != nil {
 		log.Println("wireguard:", err)
 	}
 }
