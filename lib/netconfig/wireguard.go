@@ -86,6 +86,11 @@ func (this *Wireguard) apply() error {
 			time.Sleep(2 * time.Second)
 		}
 
+		link, err = netlink.LinkByName(iface.Name)
+		if err != nil {
+			return fmt.Errorf("cannot read link: %w", err)
+		}
+
 		if err := netlink.LinkSetUp(link); err != nil {
 			return fmt.Errorf("cannot set link up: %w", err)
 		}
