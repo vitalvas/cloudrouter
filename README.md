@@ -8,3 +8,5 @@
   * [ ] DNS over HTTPS
   * [ ] DNS over TLS
   * [ ] DNS over QUIC
+* [X] Network Config
+  * [X] WireGuard VPN
