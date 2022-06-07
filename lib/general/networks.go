@@ -21,6 +21,9 @@ var PrivateNetworks = []string{
 	"192.168.0.0/16",
 	"192.0.2.0/24",
 
+	// reserved: https://datatracker.ietf.org/doc/html/rfc6598#section-7
+	"100.64.0.0/10",
+
 	// reserved: https://tools.ietf.org/html/rfc4193#section-3.1
 	"fc00::/7",
 
