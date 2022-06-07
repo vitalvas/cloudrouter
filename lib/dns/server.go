@@ -1,7 +1,12 @@
 package dns
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net"
+	"os"
+	"path/filepath"
 	"sync"
 	"time"
 
@@ -13,10 +18,20 @@ import (
 	"golang.org/x/time/rate"
 )
 
-var log = logger.NewConsole()
+var (
+	log = logger.NewConsole()
+
+	defaultUpstream = []string{
+		"8.8.8.8", "8.8.4.4", // Google
+		"1.1.1.1", "1.0.0.1", // Cloudflare
+		"94.140.14.14", "94.140.15.15", // AdGuard DNS
+	}
+)
 
 type Server struct {
 	Mux *dns.ServeMux
+
+	cfg DNS
 
 	client    *dns.Client
 	ratelimit *rate.Limiter
@@ -26,6 +41,10 @@ type Server struct {
 
 	dnsUDPListeners *multilisten.Pool
 	dnsTCPListeners *multilisten.Pool
+}
+
+type DNS struct {
+	Upstream []string `json:"upstream"`
 }
 
 type listenerAdapter struct {
@@ -39,14 +58,12 @@ func (this *listenerAdapter) Close() error {
 func NewServer() *Server {
 	server := &Server{
 		Mux: dns.NewServeMux(),
+
 		client: &dns.Client{
 			Timeout: 2 * time.Second,
 		},
-		ratelimit: rate.NewLimiter(rate.Every(time.Second), 10),
-		upstream: []string{
-			"8.8.8.8:53", "8.8.4.4:53",
-			"1.1.1.1:53", "1.0.0.1:53",
-		},
+
+		ratelimit: rate.NewLimiter(rate.Every(time.Second), 1),
 
 		dnsUDPListeners: multilisten.NewPool(),
 		dnsTCPListeners: multilisten.NewPool(),
@@ -68,6 +85,25 @@ func (this *Server) upstreams() []string {
 }
 
 func (this *Server) Apply() error {
+	b, err := ioutil.ReadFile(filepath.Join(general.ConfigDir, "dns.json"))
+	if err != nil {
+		if !os.IsNotExist(err) {
+			return err
+		}
+	} else {
+		if err := json.Unmarshal(b, &this.cfg); err != nil {
+			return fmt.Errorf("cannot unmarshal config: %w", err)
+		}
+	}
+
+	this.upstreamLock.RLock()
+	if len(this.cfg.Upstream) > 0 {
+		this.upstream = this.cfg.Upstream
+	} else {
+		this.upstream = defaultUpstream
+	}
+	this.upstreamLock.RUnlock()
+
 	addrs, err := general.PrivateInterfaceAddrs()
 	if err != nil {
 		return err
