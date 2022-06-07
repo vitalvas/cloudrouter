@@ -101,3 +101,9 @@ func interfaceAddrs(keep func(string, net.IP) bool) ([]string, error) {
 func PrivateInterfaceAddrs() ([]string, error) {
 	return interfaceAddrs(isPrivate)
 }
+
+func PublicInterfaceAddrs() ([]string, error) {
+	return interfaceAddrs(func(iface string, addr net.IP) bool {
+		return !isPrivate(iface, addr)
+	})
+}
