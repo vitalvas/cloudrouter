@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/vishvananda/netlink"
+	"github.com/vitalvas/cloudrouter/lib/general"
 	"golang.zx2c4.com/wireguard/wgctrl"
 	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 )
@@ -53,7 +54,7 @@ func NewWireguard() (*Wireguard, error) {
 }
 
 func (this *Wireguard) apply() error {
-	b, err := ioutil.ReadFile(filepath.Join(configDir, "netconfig_wireguard.json"))
+	b, err := ioutil.ReadFile(filepath.Join(general.ConfigDir, "netconfig_wireguard.json"))
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
