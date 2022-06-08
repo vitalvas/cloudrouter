@@ -1,17 +1,13 @@
 PKG_PREFIX := github.com/vitalvas/cloudrouter
+APPS := $(patsubst app/%,cloudrouter-%,$(wildcard app/*))
 GO_BUILDINFO = -s -w
 
 .PHONY: $(MAKECMDGOALS)
 
-all: \
-	clean \
-	cloudrouter-dns \
-	cloudrouter-dhcp4-server \
-	cloudrouter-netconfig \
-	cloudrouter-netwatch
+all: clean $(APPS)
 
 cloudrouter-%:
-	GOOS=linux go build -ldflags "$(GO_BUILDINFO)" -o bin/$@ $(PKG_PREFIX)/app/$*
+	GOOS=linux GOARCH=amd64 go build -ldflags "$(GO_BUILDINFO)" -o bin/$@ $(PKG_PREFIX)/app/$*
 
 clean:
 	rm -Rf bin/*
