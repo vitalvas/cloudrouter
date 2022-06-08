@@ -15,4 +15,6 @@ It is created both for clouds (on virtual machines) and for home use (EOM router
   * [ ] DNS over TLS
   * [ ] DNS over QUIC
 * [X] Network Config
+  * [ ] Interface config
+  * [ ] Routing
   * [X] WireGuard VPN
