@@ -1,7 +1,7 @@
 package main
 
 import (
-	dhcp4server "github.com/vitalvas/cloudrouter/lib/dhcp4-server"
+	dhcp4server "github.com/vitalvas/cloudrouter/internal/dhcp4-server"
 	"github.com/vitalvas/cloudrouter/lib/runner"
 )
 
