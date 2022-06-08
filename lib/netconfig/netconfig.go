@@ -26,7 +26,11 @@ func NewNetConfig() *NetConfig {
 	return this
 }
 
-func (this *NetConfig) Apply() {
+func (this *NetConfig) Shutdown() {
+
+}
+
+func (this *NetConfig) Apply() error {
 	if err := applySysctl(); err != nil {
 		log.Println("sysctl:", err)
 	}
@@ -38,4 +42,6 @@ func (this *NetConfig) Apply() {
 	if err := this.wireguard.apply(); err != nil {
 		log.Println("wireguard:", err)
 	}
+
+	return nil
 }
