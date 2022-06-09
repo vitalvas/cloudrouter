@@ -6,14 +6,13 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/vitalvas/cloudrouter/lib/general"
-	"github.com/vitalvas/cloudrouter/lib/multilisten"
 )
 
 type Server struct {
-	listeners *multilisten.Pool
-	cfg       DHCPInterfaces
+	cfg DHCPInterfaces
 }
 
 type DHCPInterfaces struct {
@@ -21,17 +20,15 @@ type DHCPInterfaces struct {
 }
 
 type DHCPInterface struct {
-	Name string `json:"name"`
+	Name      string        `json:"name"`
+	LeaseTime time.Duration `json:"lease_time"`
 }
 
 func NewServer() *Server {
-	return &Server{
-		listeners: multilisten.NewPool(),
-	}
+	return &Server{}
 }
 
 func (this *Server) Shutdown() {
-	this.listeners.Close()
 }
 
 func (this *Server) Apply() error {
