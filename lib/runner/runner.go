@@ -19,6 +19,10 @@ func Execute(srv Runner) {
 
 	defer srv.Shutdown()
 
+	if err := srv.Apply(); err != nil {
+		log.Printf("error add listener: %v", err)
+	}
+
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGUSR1, syscall.SIGINT)
 
