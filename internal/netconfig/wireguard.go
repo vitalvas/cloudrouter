@@ -53,6 +53,10 @@ func NewWireguard() (*Wireguard, error) {
 	return this, nil
 }
 
+func (this *Wireguard) Close() {
+	this.client.Close()
+}
+
 func (this *Wireguard) apply() error {
 	b, err := ioutil.ReadFile(filepath.Join(general.ConfigDir, "netconfig_wireguard.json"))
 	if err != nil {
