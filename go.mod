@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/digineo/go-ping v1.0.1
 	github.com/google/nftables v0.0.0-20220516205333-a9775fb167d2
+	github.com/krolaw/dhcp4 v0.0.0-20190909130307-a50d88189771
 	github.com/miekg/dns v1.1.49
 	github.com/vishvananda/netlink v1.1.0
 	golang.org/x/time v0.0.0-20220411224347-583f2d630306
@@ -15,7 +16,6 @@ require (
 	github.com/digineo/go-logwrap v0.0.0-20181106161722-a178c58ea3f0 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/josharian/native v1.0.0 // indirect
-	github.com/krolaw/dhcp4 v0.0.0-20190909130307-a50d88189771 // indirect
 	github.com/mdlayher/genetlink v1.2.0 // indirect
 	github.com/mdlayher/netlink v1.6.0 // indirect
 	github.com/mdlayher/socket v0.2.3 // indirect

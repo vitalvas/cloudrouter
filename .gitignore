@@ -1,3 +1,5 @@
 cloudrouter-*
 bin/*
+build/*
 _old/*
+.vscode/
