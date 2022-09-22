@@ -41,35 +41,35 @@ type WireguardPeer struct {
 }
 
 func NewWireguard() (*Wireguard, error) {
-	this := &Wireguard{}
+	wg := &Wireguard{}
 
 	var err error
 
-	this.client, err = wgctrl.New()
+	wg.client, err = wgctrl.New()
 	if err != nil {
 		return nil, err
 	}
 
-	return this, nil
+	return wg, nil
 }
 
-func (this *Wireguard) Close() {
-	this.client.Close()
+func (wg *Wireguard) Close() {
+	wg.client.Close()
 }
 
-func (this *Wireguard) apply() error {
+func (wg *Wireguard) apply() error {
 	b, err := ioutil.ReadFile(filepath.Join(general.ConfigDir, "netconfig_wireguard.json"))
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
 		}
 	} else {
-		if err := json.Unmarshal(b, &this.cfg); err != nil {
+		if err := json.Unmarshal(b, &wg.cfg); err != nil {
 			return fmt.Errorf("cannot unmarshal config: %w", err)
 		}
 	}
 
-	for _, iface := range this.cfg.Interfaces {
+	for _, iface := range wg.cfg.Interfaces {
 		link, err := netlink.LinkByName(iface.Name)
 		if err != nil {
 			if _, ok := err.(netlink.LinkNotFoundError); !ok {
@@ -100,15 +100,15 @@ func (this *Wireguard) apply() error {
 			return fmt.Errorf("cannot set link up: %w", err)
 		}
 
-		if err := this.syncInterface(iface); err != nil {
+		if err := wg.syncInterface(iface); err != nil {
 			return err
 		}
 	}
 
-	return this.clean()
+	return wg.clean()
 }
 
-func (this *Wireguard) syncInterface(iface WireguardInterface) error {
+func (wg *Wireguard) syncInterface(iface WireguardInterface) error {
 	cfg := wgtypes.Config{
 		ReplacePeers: true,
 	}
@@ -180,15 +180,15 @@ func (this *Wireguard) syncInterface(iface WireguardInterface) error {
 		cfg.Peers = append(cfg.Peers, peerCfg)
 	}
 
-	if err := this.client.ConfigureDevice(iface.Name, cfg); err != nil {
+	if err := wg.client.ConfigureDevice(iface.Name, cfg); err != nil {
 		return fmt.Errorf("cannot configure device: %w", err)
 	}
 
 	return nil
 }
 
-func (this *Wireguard) clean() error {
-	devs, err := this.client.Devices()
+func (wg *Wireguard) clean() error {
+	devs, err := wg.client.Devices()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -197,7 +197,7 @@ func (this *Wireguard) clean() error {
 
 	for _, dev := range devs {
 		exists := false
-		for _, row := range this.cfg.Interfaces {
+		for _, row := range wg.cfg.Interfaces {
 			if dev.Name == row.Name {
 				exists = true
 			}

@@ -9,19 +9,19 @@ type Firewall struct {
 }
 
 func NewFirewall() (*Firewall, error) {
-	this := &Firewall{}
+	fw := &Firewall{}
 
 	var err error
-	this.conn, err = nftables.New()
+	fw.conn, err = nftables.New()
 	if err != nil {
 		return nil, err
 	}
 
-	return this, nil
+	return fw, nil
 }
 
-func (this *Firewall) apply() error {
-	this.conn.FlushRuleset()
+func (fw *Firewall) apply() error {
+	fw.conn.FlushRuleset()
 
 	table4 := &nftables.Table{
 		Family: nftables.TableFamilyIPv4,
@@ -34,7 +34,7 @@ func (this *Firewall) apply() error {
 	}
 
 	for _, table := range []*nftables.Table{table4, table6} {
-		this.applyTableFilter(table)
+		fw.applyTableFilter(table)
 	}
 
 	nat4 := &nftables.Table{
@@ -43,16 +43,16 @@ func (this *Firewall) apply() error {
 	}
 
 	for _, table := range []*nftables.Table{nat4} {
-		this.applyTableNAT(table)
+		fw.applyTableNAT(table)
 	}
 
-	return this.conn.Flush()
+	return fw.conn.Flush()
 }
 
-func (this *Firewall) applyTableFilter(table *nftables.Table) {
-	filter := this.conn.AddTable(table)
+func (fw *Firewall) applyTableFilter(table *nftables.Table) {
+	filter := fw.conn.AddTable(table)
 
-	this.conn.AddChain(&nftables.Chain{
+	fw.conn.AddChain(&nftables.Chain{
 		Name:     "input",
 		Hooknum:  nftables.ChainHookInput,
 		Priority: nftables.ChainPriorityFilter,
@@ -60,7 +60,7 @@ func (this *Firewall) applyTableFilter(table *nftables.Table) {
 		Type:     nftables.ChainTypeFilter,
 	})
 
-	this.conn.AddChain(&nftables.Chain{
+	fw.conn.AddChain(&nftables.Chain{
 		Name:     "forward",
 		Hooknum:  nftables.ChainHookForward,
 		Priority: nftables.ChainPriorityFilter,
@@ -68,7 +68,7 @@ func (this *Firewall) applyTableFilter(table *nftables.Table) {
 		Type:     nftables.ChainTypeFilter,
 	})
 
-	this.conn.AddChain(&nftables.Chain{
+	fw.conn.AddChain(&nftables.Chain{
 		Name:     "output",
 		Hooknum:  nftables.ChainHookOutput,
 		Priority: nftables.ChainPriorityFilter,
@@ -78,10 +78,10 @@ func (this *Firewall) applyTableFilter(table *nftables.Table) {
 
 }
 
-func (this *Firewall) applyTableNAT(table *nftables.Table) {
-	filter := this.conn.AddTable(table)
+func (fw *Firewall) applyTableNAT(table *nftables.Table) {
+	filter := fw.conn.AddTable(table)
 
-	this.conn.AddChain(&nftables.Chain{
+	fw.conn.AddChain(&nftables.Chain{
 		Name:     "prerouting",
 		Hooknum:  nftables.ChainHookPrerouting,
 		Priority: nftables.ChainPriorityFilter,
@@ -89,7 +89,7 @@ func (this *Firewall) applyTableNAT(table *nftables.Table) {
 		Type:     nftables.ChainTypeNAT,
 	})
 
-	this.conn.AddChain(&nftables.Chain{
+	fw.conn.AddChain(&nftables.Chain{
 		Name:     "postrouting",
 		Hooknum:  nftables.ChainHookPostrouting,
 		Priority: nftables.ChainPriorityNATSource,

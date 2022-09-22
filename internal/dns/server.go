@@ -50,8 +50,8 @@ type listenerAdapter struct {
 	*miekgdns.Server
 }
 
-func (this *listenerAdapter) Close() error {
-	return this.Shutdown()
+func (srv *listenerAdapter) Close() error {
+	return srv.Shutdown()
 }
 
 func NewServer() *Server {
@@ -73,61 +73,61 @@ func NewServer() *Server {
 	return server
 }
 
-func (this *Server) upstreams() []string {
-	this.upstreamLock.RLock()
-	defer this.upstreamLock.RUnlock()
+func (srv *Server) upstreams() []string {
+	srv.upstreamLock.RLock()
+	defer srv.upstreamLock.RUnlock()
 
-	result := make([]string, len(this.upstream))
-	copy(result, this.upstream)
+	result := make([]string, len(srv.upstream))
+	copy(result, srv.upstream)
 
 	return result
 }
 
-func (this *Server) Apply() error {
+func (srv *Server) Apply() error {
 	b, err := ioutil.ReadFile(filepath.Join(general.ConfigDir, "dns.json"))
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
 		}
 	} else {
-		if err := json.Unmarshal(b, &this.cfg); err != nil {
+		if err := json.Unmarshal(b, &srv.cfg); err != nil {
 			return fmt.Errorf("cannot unmarshal config: %w", err)
 		}
 	}
 
-	this.upstreamLock.RLock()
-	if len(this.cfg.Upstream) > 0 {
-		this.upstream = this.cfg.Upstream
+	srv.upstreamLock.RLock()
+	if len(srv.cfg.Upstream) > 0 {
+		srv.upstream = srv.cfg.Upstream
 	} else {
-		this.upstream = defaultUpstream
+		srv.upstream = defaultUpstream
 	}
-	this.upstreamLock.RUnlock()
+	srv.upstreamLock.RUnlock()
 
 	addrs, err := general.PrivateInterfaceAddrs()
 	if err != nil {
 		return err
 	}
 
-	this.dnsUDPListeners.ListenAndServe(addrs, func(host string) multilisten.Listener {
+	srv.dnsUDPListeners.ListenAndServe(addrs, func(host string) multilisten.Listener {
 		return &listenerAdapter{&miekgdns.Server{
 			Addr:    net.JoinHostPort(host, "53"),
 			Net:     "udp",
-			Handler: this.Mux,
+			Handler: srv.Mux,
 		}}
 	})
 
-	this.dnsTCPListeners.ListenAndServe(addrs, func(host string) multilisten.Listener {
+	srv.dnsTCPListeners.ListenAndServe(addrs, func(host string) multilisten.Listener {
 		return &listenerAdapter{&miekgdns.Server{
 			Addr:    net.JoinHostPort(host, "53"),
 			Net:     "tcp",
-			Handler: this.Mux,
+			Handler: srv.Mux,
 		}}
 	})
 
 	return nil
 }
 
-func (this *Server) Shutdown() {
-	this.dnsTCPListeners.Close()
-	this.dnsUDPListeners.Close()
+func (srv *Server) Shutdown() {
+	srv.dnsTCPListeners.Close()
+	srv.dnsUDPListeners.Close()
 }

@@ -28,17 +28,17 @@ func NewServer() *Server {
 	return &Server{}
 }
 
-func (this *Server) Shutdown() {
+func (h *Server) Shutdown() {
 }
 
-func (this *Server) Apply() error {
+func (h *Server) Apply() error {
 	b, err := ioutil.ReadFile(filepath.Join(general.ConfigDir, "dhcp4_server.json"))
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
 		}
 	} else {
-		if err := json.Unmarshal(b, &this.cfg); err != nil {
+		if err := json.Unmarshal(b, &h.cfg); err != nil {
 			return fmt.Errorf("cannot unmarshal config: %w", err)
 		}
 	}

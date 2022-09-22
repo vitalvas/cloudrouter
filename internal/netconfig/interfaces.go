@@ -23,13 +23,13 @@ func NewInterfaces() *Interfaces {
 	return &Interfaces{}
 }
 
-func (this *Interfaces) Apply() error {
+func (iface *Interfaces) Apply() error {
 	_, err := ioutil.ReadFile(filepath.Join(general.ConfigDir, "interfaces.json"))
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
 		} else {
-			if err := this.generateInterfaces(); err != nil {
+			if err := iface.generateInterfaces(); err != nil {
 				return err
 			}
 		}
@@ -38,7 +38,7 @@ func (this *Interfaces) Apply() error {
 	return nil
 }
 
-func (this *Interfaces) generateInterfaces() error {
+func (iface *Interfaces) generateInterfaces() error {
 	links, err := netlink.LinkList()
 	if err != nil {
 		return err

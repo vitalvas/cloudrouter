@@ -11,42 +11,42 @@ type NetConfig struct {
 }
 
 func NewNetConfig() *NetConfig {
-	this := &NetConfig{
+	nc := &NetConfig{
 		interfaces: NewInterfaces(),
 	}
 
 	var err error
-	this.wireguard, err = NewWireguard()
+	nc.wireguard, err = NewWireguard()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	this.firewall, err = NewFirewall()
+	nc.firewall, err = NewFirewall()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return this
+	return nc
 }
 
-func (this *NetConfig) Shutdown() {
-	this.wireguard.Close()
+func (nc *NetConfig) Shutdown() {
+	nc.wireguard.Close()
 }
 
-func (this *NetConfig) Apply() error {
+func (nc *NetConfig) Apply() error {
 	if err := applySysctl(); err != nil {
 		log.Println("sysctl:", err)
 	}
 
-	if err := this.interfaces.Apply(); err != nil {
+	if err := nc.interfaces.Apply(); err != nil {
 		log.Println("interfaces:", err)
 	}
 
-	if err := this.firewall.apply(); err != nil {
+	if err := nc.firewall.apply(); err != nil {
 		log.Println("firewall:", err)
 	}
 
-	if err := this.wireguard.apply(); err != nil {
+	if err := nc.wireguard.apply(); err != nil {
 		log.Println("wireguard:", err)
 	}
 

@@ -22,7 +22,7 @@ func NewTask() *Task {
 	}
 }
 
-func (this *Task) Execute() (time.Duration, error) {
+func (task *Task) Execute() (time.Duration, error) {
 	pinger, err := ping.New("0.0.0.0", "::")
 	if err != nil {
 		return 0, err
@@ -34,7 +34,7 @@ func (this *Task) Execute() (time.Duration, error) {
 		pinger.SetPayloadSize(56)
 	}
 
-	rtt, err := pinger.PingAttempts(this.Host, this.Timeout, this.Attempts)
+	rtt, err := pinger.PingAttempts(task.Host, task.Timeout, task.Attempts)
 	if err != nil {
 		return 0, err
 	}
