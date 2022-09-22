@@ -4,10 +4,13 @@ GO_BUILDINFO = -s -w
 
 .PHONY: $(MAKECMDGOALS)
 
-all: clean $(APPS)
+all: clean test $(APPS)
+
+test:
+	golangci-lint run
 
 cloudrouter-%:
-	GOOS=linux GOARCH=amd64 go build -ldflags "$(GO_BUILDINFO)" -o build/$@ $(PKG_PREFIX)/app/$*
+	GOOS=linux GOARCH=amd64 go build -ldflags "$(GO_BUILDINFO)" -o build/$@-amd64 $(PKG_PREFIX)/app/$*
 
 clean:
 	rm -Rf build/*
