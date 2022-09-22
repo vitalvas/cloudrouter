@@ -24,7 +24,7 @@ var defaultSysctl = map[string]string{
 }
 
 func sysctlPathFromKey(key string) string {
-	return filepath.Join("/proc/sys", strings.Replace(key, ".", "/", -1))
+	return filepath.Join("/proc/sys", strings.ReplaceAll(key, ".", "/"))
 }
 
 func sysctlGet(key string) (string, error) {

@@ -28,38 +28,38 @@ func NewPool() *Pool {
 	}
 }
 
-func (this *Pool) ListenAndServe(hosts []string, listenerFor func(host string) Listener) {
-	this.lock.Lock()
-	defer this.lock.Unlock()
+func (pool *Pool) ListenAndServe(hosts []string, listenerFor func(host string) Listener) {
+	pool.lock.Lock()
+	defer pool.lock.Unlock()
 
 	vanished := make(map[string]bool)
 
-	for host := range this.listeners {
+	for host := range pool.listeners {
 		vanished[host] = false
 	}
 
 	for _, host := range hosts {
-		if _, ok := this.listeners[host]; ok {
+		if _, ok := pool.listeners[host]; ok {
 			delete(vanished, host)
 		} else {
 			log.Printf("now listening on %s", host)
 
 			ln := listenerFor(host)
-			this.listeners[host] = ln
+			pool.listeners[host] = ln
 
 			go func(host string, ln Listener) {
-				for !this.shutdown {
+				for !pool.shutdown {
 					if err := ln.ListenAndServe(); err != nil {
 						log.Printf("listener for %q died: %v", host, err)
 					}
 
-					time.Sleep(this.RestartDelay)
+					time.Sleep(pool.RestartDelay)
 				}
 
-				this.lock.Lock()
-				defer this.lock.Unlock()
+				pool.lock.Lock()
+				defer pool.lock.Unlock()
 
-				delete(this.listeners, host)
+				delete(pool.listeners, host)
 			}(host, ln)
 		}
 	}
@@ -67,15 +67,15 @@ func (this *Pool) ListenAndServe(hosts []string, listenerFor func(host string) L
 	for host := range vanished {
 		log.Printf("no longer listening on %s", host)
 
-		this.listeners[host].Close()
-		delete(this.listeners, host)
+		pool.listeners[host].Close()
+		delete(pool.listeners, host)
 	}
 }
 
-func (this *Pool) Close() {
-	this.shutdown = true
+func (pool *Pool) Close() {
+	pool.shutdown = true
 
-	for host := range this.listeners {
-		this.listeners[host].Close()
+	for host := range pool.listeners {
+		pool.listeners[host].Close()
 	}
 }

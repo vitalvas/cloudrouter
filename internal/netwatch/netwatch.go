@@ -1,5 +1,5 @@
 package netwatch
 
-type NetWatch struct {
-	tasks []Task
-}
+// type NetWatch struct {
+// tasks []Task
+// }

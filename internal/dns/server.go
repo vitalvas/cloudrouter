@@ -10,7 +10,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/miekg/dns"
 	miekgdns "github.com/miekg/dns"
 	"github.com/vitalvas/cloudrouter/lib/general"
 	"github.com/vitalvas/cloudrouter/lib/logger"
@@ -29,11 +28,11 @@ var (
 )
 
 type Server struct {
-	Mux *dns.ServeMux
+	Mux *miekgdns.ServeMux
 
 	cfg DNS
 
-	client    *dns.Client
+	client    *miekgdns.Client
 	ratelimit *rate.Limiter
 
 	upstreamLock sync.RWMutex
@@ -57,9 +56,9 @@ func (this *listenerAdapter) Close() error {
 
 func NewServer() *Server {
 	server := &Server{
-		Mux: dns.NewServeMux(),
+		Mux: miekgdns.NewServeMux(),
 
-		client: &dns.Client{
+		client: &miekgdns.Client{
 			Timeout: 2 * time.Second,
 		},
 

@@ -2,14 +2,13 @@ package dhcp4server
 
 import (
 	"log"
-	"net"
 	"sync"
 
 	"github.com/krolaw/dhcp4"
 )
 
 type Handler struct {
-	serverIP    net.IP
+	// serverIP    net.IP
 	leasesMutex sync.Mutex
 }
 

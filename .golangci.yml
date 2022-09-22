@@ -25,4 +25,5 @@ linters:
 linters-settings:
   gosec:
     excludes:
+      - G306
       - G402
