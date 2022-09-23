@@ -28,10 +28,9 @@ func (iface *Interfaces) Apply() error {
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
-		} else {
-			if err := iface.generateInterfaces(); err != nil {
-				return err
-			}
+		}
+		if err := iface.generateInterfaces(); err != nil {
+			return err
 		}
 	}
 

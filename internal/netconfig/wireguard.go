@@ -69,8 +69,9 @@ func (wg *Wireguard) apply() error {
 		}
 	}
 
+	var link netlink.Link
 	for _, iface := range wg.cfg.Interfaces {
-		link, err := netlink.LinkByName(iface.Name)
+		link, err = netlink.LinkByName(iface.Name)
 		if err != nil {
 			if _, ok := err.(netlink.LinkNotFoundError); !ok {
 				return fmt.Errorf("cannot read link: %w", err)
