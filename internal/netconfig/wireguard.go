@@ -71,25 +71,8 @@ func (wg *Wireguard) apply() error {
 
 	var link netlink.Link
 	for _, iface := range wg.cfg.Interfaces {
-		link, err = netlink.LinkByName(iface.Name)
-		if err != nil {
-			if _, ok := err.(netlink.LinkNotFoundError); !ok {
-				return fmt.Errorf("cannot read link: %w", err)
-			}
-
-			wgLink := &netlink.GenericLink{
-				LinkAttrs: netlink.LinkAttrs{
-					Name: iface.Name,
-				},
-				LinkType: "wireguard",
-			}
-
-			if err := netlink.LinkAdd(wgLink); err != nil {
-				return fmt.Errorf("cannot create link: %w", err)
-			}
-
-			// Needs some sleeping to wait for interface creating.
-			time.Sleep(2 * time.Second)
+		if err := wg.createInterface(iface.Name); err != nil {
+			return err
 		}
 
 		link, err = netlink.LinkByName(iface.Name)
@@ -107,6 +90,34 @@ func (wg *Wireguard) apply() error {
 	}
 
 	return wg.clean()
+}
+
+func (wg *Wireguard) createInterface(name string) error {
+	_, err := netlink.LinkByName(name)
+	// skip if link exists
+	if err == nil {
+		return nil
+	}
+
+	if _, ok := err.(netlink.LinkNotFoundError); !ok {
+		return fmt.Errorf("cannot read link: %w", err)
+	}
+
+	wgLink := &netlink.GenericLink{
+		LinkAttrs: netlink.LinkAttrs{
+			Name: name,
+		},
+		LinkType: "wireguard",
+	}
+
+	if err := netlink.LinkAdd(wgLink); err != nil {
+		return fmt.Errorf("cannot create link: %w", err)
+	}
+
+	// Needs some sleeping to wait for interface creating.
+	time.Sleep(2 * time.Second)
+
+	return nil
 }
 
 func (wg *Wireguard) syncInterface(iface WireguardInterface) error {
