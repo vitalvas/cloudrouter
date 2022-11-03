@@ -1,5 +1,8 @@
 # CloudRouter
 
+> **Warning**
+> Current project under R&D. There is no guarantee that it will work, but corrections are welcome.
+
 CloudRouter is a pure-GO implementation of small router.
 
 Main idea - creating a router that does not use any third-party applications or any warpers. Only the linux kernel and applications from this project.
