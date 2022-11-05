@@ -3,3 +3,4 @@ bin/*
 build/*
 _old/*
 .vscode/
+tmp_*.go
