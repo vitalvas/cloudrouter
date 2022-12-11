@@ -9,7 +9,7 @@ require (
 	github.com/miekg/dns v1.1.50
 	github.com/vishvananda/netlink v1.1.0
 	golang.org/x/exp v0.0.0-20221031165847-c99f073a8326
-	golang.org/x/time v0.2.0
+	golang.org/x/time v0.3.0
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20221104135756-97bc4ad4a1cb
 )
 
