@@ -16,14 +16,14 @@ const (
 )
 
 var (
-	ipv4Addr = &net.UDPAddr{
-		IP:   net.ParseIP(addrIPv4),
-		Port: addrPort,
-	}
-	ipv6Addr = &net.UDPAddr{
-		IP:   net.ParseIP(addrIPv6),
-		Port: addrPort,
-	}
+	// ipv4Addr = &net.UDPAddr{
+	// 	IP:   net.ParseIP(addrIPv4),
+	// 	Port: addrPort,
+	// }
+	// ipv6Addr = &net.UDPAddr{
+	// 	IP:   net.ParseIP(addrIPv6),
+	// 	Port: addrPort,
+	// }
 
 	allowedLinkType = []string{
 		"device", "tuntap",
