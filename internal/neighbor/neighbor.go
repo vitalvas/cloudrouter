@@ -9,11 +9,11 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-const (
-	addrIPv4 = "224.0.0.242"
-	addrIPv6 = "ff02::f2"
-	addrPort = 1024
-)
+// const (
+// 	addrIPv4 = "224.0.0.242"
+// 	addrIPv6 = "ff02::f2"
+// 	addrPort = 1024
+// )
 
 var (
 	// ipv4Addr = &net.UDPAddr{
