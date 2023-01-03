@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/vishvananda/netlink"
-	"golang.org/x/exp/slices"
+	"github.com/vitalvas/cloudrouter/lib/tools"
 )
 
 // const (
@@ -41,7 +41,7 @@ func (s *Server) server() {
 		}
 
 		for _, row := range list {
-			if slices.Contains(allowedLinkType, row.Type()) {
+			if tools.SlicesContains(allowedLinkType, row.Type()) {
 				sendNeighborPacket(row.Attrs())
 			}
 		}
