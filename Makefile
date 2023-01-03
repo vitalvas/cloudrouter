@@ -21,4 +21,4 @@ clean:
 update:
 	go clean -modcache
 	go get -v -u ./...
-	go mod tidy
+	go mod tidy -v
