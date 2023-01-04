@@ -2,7 +2,6 @@ package netconfig
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -24,7 +23,7 @@ func NewInterfaces() *Interfaces {
 }
 
 func (iface *Interfaces) Apply() error {
-	_, err := ioutil.ReadFile(filepath.Join(general.ConfigDir, "interfaces.json"))
+	_, err := os.ReadFile(filepath.Join(general.ConfigDir, "interfaces.json"))
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err

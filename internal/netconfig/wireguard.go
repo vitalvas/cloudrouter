@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net"
 	"os"
 	"path/filepath"
@@ -58,7 +57,7 @@ func (wg *Wireguard) Close() {
 }
 
 func (wg *Wireguard) apply() error {
-	b, err := ioutil.ReadFile(filepath.Join(general.ConfigDir, "netconfig_wireguard.json"))
+	b, err := os.ReadFile(filepath.Join(general.ConfigDir, "netconfig_wireguard.json"))
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
