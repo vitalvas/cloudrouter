@@ -21,5 +21,5 @@ It is created both for clouds (on virtual machines) and for home use (EOM router
   * [ ] Routing
   * [X] WireGuard VPN
 * [X] Neighbor discovery
-  * [X] Personal protocol
+  * [X] Personal protocol (CRDP)
   * [ ] LLDP

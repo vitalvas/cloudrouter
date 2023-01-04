@@ -30,7 +30,7 @@ func (s *Server) sender() {
 					continue
 				}
 
-				sendInterfaceNeighborPacket(attrs)
+				s.sendInterfaceNeighborPacket(attrs)
 			}
 		}
 
@@ -38,7 +38,7 @@ func (s *Server) sender() {
 	}
 }
 
-func sendInterfaceNeighborPacket(link *netlink.LinkAttrs) {
+func (s *Server) sendInterfaceNeighborPacket(link *netlink.LinkAttrs) {
 	iface, err := net.InterfaceByIndex(link.Index)
 	if err != nil {
 		return
@@ -49,7 +49,7 @@ func sendInterfaceNeighborPacket(link *netlink.LinkAttrs) {
 		return
 	}
 
-	msg, err := makeNeighborPacket(link, addrs)
+	msg, err := s.makeNeighborPacket(link, addrs)
 	if err != nil {
 		return
 	}

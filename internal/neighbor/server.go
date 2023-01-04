@@ -1,14 +1,23 @@
 package neighbor
 
-import "sync"
+import (
+	"encoding/binary"
+	"sync"
+	"time"
+)
 
 type Server struct {
+	ID       []byte
 	lock     sync.Mutex
 	shutdown bool
+
+	neighbors sync.Map
 }
 
 func NewServer() *Server {
-	return &Server{}
+	return &Server{
+		ID: getMachineID(),
+	}
 }
 
 func (s *Server) Apply() error {
@@ -21,4 +30,11 @@ func (s *Server) Apply() error {
 
 func (s *Server) Shutdown() {
 	s.shutdown = true
+}
+
+func getMachineID() []byte {
+	b := make([]byte, 8)
+	id := time.Now().UnixNano()
+	binary.LittleEndian.PutUint64(b, uint64(id))
+	return b
 }
