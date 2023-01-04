@@ -2,6 +2,10 @@ name: Tests
 
 on:
   push:
+    paths:
+      - 'app/**'
+      - 'internal/**'
+      - 'lib/**'
     tags-ignore:
       - v*
     branches:
