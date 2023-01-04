@@ -15,7 +15,6 @@ It is created both for clouds (on virtual machines) and for home use (EOM router
   * [X] Static upstream
   * [ ] Cache
   * [ ] DNS over HTTPS
-  * [ ] DNS over TLS
   * [ ] DNS over QUIC
 * [X] Network Config
   * [ ] Interface config
