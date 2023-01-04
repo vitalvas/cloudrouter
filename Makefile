@@ -15,6 +15,9 @@ cloudrouter-%:
 	GOOS=linux GOARCH=amd64 go build -ldflags "$(GO_BUILDINFO)" -o build/amd64/$@ $(PKG_PREFIX)/app/$*
 	GOOS=linux GOARCH=arm GOARM=7 go build -ldflags "$(GO_BUILDINFO)" -o build/armv7/$@ $(PKG_PREFIX)/app/$*
 
+compile:
+	protoc --go_out=. internal/neighbor/message/neighbor.proto
+
 clean:
 	rm -Rf build/*
 

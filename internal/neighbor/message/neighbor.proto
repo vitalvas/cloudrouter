@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "internal/neighbor/message";
+
+message Neighbor {
+    Chassis chassis = 1;
+    repeated MgmtAddress mgmt_address = 2;
+}
+
+message Chassis {
+    string name = 1;
+    bytes mac = 2;
+}
+
+message MgmtAddress {
+    uint32 version = 1;
+    bytes address = 2;
+}

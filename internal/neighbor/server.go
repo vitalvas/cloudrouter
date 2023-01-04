@@ -3,7 +3,8 @@ package neighbor
 import "sync"
 
 type Server struct {
-	lock sync.Mutex
+	lock     sync.Mutex
+	shutdown bool
 }
 
 func NewServer() *Server {
@@ -19,5 +20,5 @@ func (s *Server) Apply() error {
 }
 
 func (s *Server) Shutdown() {
-
+	s.shutdown = true
 }
