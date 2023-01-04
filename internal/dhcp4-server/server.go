@@ -3,7 +3,6 @@ package dhcp4server
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -32,7 +31,7 @@ func (h *Server) Shutdown() {
 }
 
 func (h *Server) Apply() error {
-	b, err := ioutil.ReadFile(filepath.Join(general.ConfigDir, "dhcp4_server.json"))
+	b, err := os.ReadFile(filepath.Join(general.ConfigDir, "dhcp4_server.json"))
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err

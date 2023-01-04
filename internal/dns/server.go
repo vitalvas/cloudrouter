@@ -3,7 +3,6 @@ package dns
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net"
 	"os"
 	"path/filepath"
@@ -84,7 +83,7 @@ func (srv *Server) upstreams() []string {
 }
 
 func (srv *Server) Apply() error {
-	b, err := ioutil.ReadFile(filepath.Join(general.ConfigDir, "dns.json"))
+	b, err := os.ReadFile(filepath.Join(general.ConfigDir, "dns.json"))
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err

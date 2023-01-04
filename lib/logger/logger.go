@@ -2,7 +2,6 @@ package logger
 
 import (
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 )
@@ -22,7 +21,7 @@ func (w *nonBlockingWriter) Write(p []byte) (n int, _ error) {
 }
 
 func NewConsole() *log.Logger {
-	w := ioutil.Discard
+	w := io.Discard
 
 	if console, err := os.OpenFile("/dev/console", os.O_RDWR, 0600); err == nil {
 		ch := make(chan string, 1)
