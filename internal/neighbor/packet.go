@@ -16,10 +16,8 @@ func makeNeighborPacket(link *netlink.LinkAttrs, addrs []net.Addr) ([]byte, erro
 	}
 
 	msg := &message.Neighbor{
-		Chassis: &message.Chassis{
-			Name: host,
-			Mac:  link.HardwareAddr,
-		},
+		ChassisName: host,
+		ChassisMac:  link.HardwareAddr,
 	}
 
 	for _, row := range addrs {
