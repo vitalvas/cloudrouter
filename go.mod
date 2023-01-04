@@ -1,6 +1,6 @@
 module github.com/vitalvas/cloudrouter
 
-go 1.18
+go 1.19
 
 require (
 	github.com/digineo/go-ping v1.0.1
