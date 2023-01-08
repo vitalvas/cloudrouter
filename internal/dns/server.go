@@ -13,7 +13,6 @@ import (
 	"github.com/vitalvas/cloudrouter/lib/general"
 	"github.com/vitalvas/cloudrouter/lib/logger"
 	"github.com/vitalvas/cloudrouter/lib/multilisten"
-	"golang.org/x/time/rate"
 )
 
 var (
@@ -31,8 +30,7 @@ type Server struct {
 
 	cfg DNS
 
-	client    *miekgdns.Client
-	ratelimit *rate.Limiter
+	client *miekgdns.Client
 
 	upstreamLock sync.RWMutex
 	upstream     []string
@@ -60,8 +58,6 @@ func NewServer() *Server {
 		client: &miekgdns.Client{
 			Timeout: 2 * time.Second,
 		},
-
-		ratelimit: rate.NewLimiter(rate.Every(time.Second), 1),
 
 		dnsUDPListeners: multilisten.NewPool(),
 		dnsTCPListeners: multilisten.NewPool(),

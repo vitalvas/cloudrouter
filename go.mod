@@ -8,7 +8,6 @@ require (
 	github.com/krolaw/dhcp4 v0.0.0-20190909130307-a50d88189771
 	github.com/miekg/dns v1.1.50
 	github.com/vishvananda/netlink v1.1.0
-	golang.org/x/time v0.3.0
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20221104135756-97bc4ad4a1cb
 	google.golang.org/protobuf v1.28.1
 )
