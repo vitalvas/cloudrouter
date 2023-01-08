@@ -6,6 +6,8 @@ on:
       - 'app/**'
       - 'internal/**'
       - 'lib/**'
+      - 'go.mod'
+      - 'go.sum'
     tags-ignore:
       - v*
     branches:
