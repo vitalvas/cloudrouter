@@ -1,15 +1,22 @@
 package loader
 
 import (
+	"crypto/rand"
 	"encoding/base64"
 	"fmt"
 	"log"
-	"math/rand"
+	"sync"
 )
 
+var apps = []string{
+	"/apps/bin/dns",
+	"/apps/bin/neighbor",
+}
+
 type Loader struct {
-	log   *log.Logger
-	token string
+	log     *log.Logger
+	token   string
+	runOnce sync.Once
 }
 
 func New() *Loader {
@@ -24,6 +31,12 @@ func (lo *Loader) Apply() error {
 	if len(lo.token) < 10 {
 		lo.setSessionToken()
 	}
+
+	lo.runOnce.Do(func() {
+		for _, name := range apps {
+			go lo.execute(name)
+		}
+	})
 
 	return nil
 }
