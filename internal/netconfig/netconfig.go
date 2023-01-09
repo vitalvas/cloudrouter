@@ -1,10 +1,10 @@
 package netconfig
 
-import "github.com/vitalvas/cloudrouter/lib/logger"
-
-var log = logger.NewConsole()
+import "log"
 
 type NetConfig struct {
+	log *log.Logger
+
 	interfaces *Interfaces
 	wireguard  *Wireguard
 	firewall   *Firewall
@@ -16,7 +16,7 @@ func NewNetConfig() *NetConfig {
 	}
 
 	var err error
-	nc.wireguard, err = NewWireguard()
+	nc.wireguard, err = NewWireguard(nc.log)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,25 +33,29 @@ func (nc *NetConfig) Shutdown() {
 	nc.wireguard.Close()
 }
 
+func (nc *NetConfig) SetLogger(l *log.Logger) {
+	nc.log = l
+}
+
 func (nc *NetConfig) Apply() error {
-	if err := applySysctl(); err != nil {
-		log.Println("sysctl:", err)
+	if err := nc.applySysctl(); err != nil {
+		nc.log.Println("sysctl:", err)
 	}
 
 	if err := nc.interfaces.Apply(); err != nil {
-		log.Println("interfaces:", err)
+		nc.log.Println("interfaces:", err)
 	}
 
 	if err := nc.firewall.apply(); err != nil {
-		log.Println("firewall:", err)
+		nc.log.Println("firewall:", err)
 	}
 
 	if err := nc.wireguard.apply(); err != nil {
-		log.Println("wireguard:", err)
+		nc.log.Println("wireguard:", err)
 	}
 
-	if err := applySysctl(); err != nil {
-		log.Println("sysctl:", err)
+	if err := nc.applySysctl(); err != nil {
+		nc.log.Println("sysctl:", err)
 	}
 
 	return nil

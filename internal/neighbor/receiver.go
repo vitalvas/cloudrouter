@@ -2,7 +2,6 @@ package neighbor
 
 import (
 	"bytes"
-	"log"
 	"net"
 	"time"
 
@@ -30,7 +29,7 @@ type Neighbor struct {
 func (s *Server) receiver() {
 	list, err := netlink.LinkList()
 	if err != nil {
-		log.Println("error", err)
+		s.log.Println("error", err)
 		return
 	}
 
@@ -107,5 +106,5 @@ func (s *Server) receiverHander(ifname string, data []byte) {
 
 	s.neighbors.Store(msg.GetChassisId(), neighbor)
 
-	log.Printf("%#v", neighbor)
+	s.log.Printf("%#v", neighbor)
 }

@@ -40,26 +40,25 @@ func sysctlGet(key string) (string, error) {
 	}
 
 	return strings.TrimSpace(string(data)), nil
-
 }
 
 func sysctlSet(key, value string) error {
 	return os.WriteFile(sysctlPathFromKey(key), []byte(value), 0644)
 }
 
-func applySysctl() error {
+func (nc *NetConfig) applySysctl() error {
 	for key, val := range defaultSysctl {
 		current, err := sysctlGet(key)
 		if err != nil {
 			if err == os.ErrNotExist {
 				continue
 			} else {
-				log.Fatal(err)
+				nc.log.Fatal(err)
 			}
 		}
 
 		if val != current {
-			log.Println("changing", key, "from", current, "to", val)
+			nc.log.Println("changing", key, "from", current, "to", val)
 			sysctlSet(key, val)
 		}
 	}

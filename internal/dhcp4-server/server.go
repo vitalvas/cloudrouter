@@ -3,6 +3,7 @@ package dhcp4server
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -12,6 +13,7 @@ import (
 
 type Server struct {
 	cfg DHCPInterfaces
+	log *log.Logger
 }
 
 type DHCPInterfaces struct {
@@ -28,6 +30,10 @@ func NewServer() *Server {
 }
 
 func (h *Server) Shutdown() {
+}
+
+func (h *Server) SetLogger(l *log.Logger) {
+	h.log = l
 }
 
 func (h *Server) Apply() error {

@@ -1,6 +1,7 @@
 package runner
 
 import (
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,12 +11,15 @@ import (
 )
 
 type Runner interface {
+	SetLogger(*log.Logger)
 	Shutdown()
 	Apply() error
 }
 
 func Execute(srv Runner) {
-	var log = logger.NewConsole()
+	var log = logger.New()
+
+	srv.SetLogger(log)
 
 	defer srv.Shutdown()
 

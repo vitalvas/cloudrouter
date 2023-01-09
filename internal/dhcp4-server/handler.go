@@ -8,6 +8,7 @@ import (
 )
 
 type Handler struct {
+	log *log.Logger
 	// serverIP    net.IP
 	leasesMutex sync.Mutex
 }
@@ -22,7 +23,7 @@ func (h *Handler) ServeDHCP(p dhcp4.Packet, msgType dhcp4.MessageType, options d
 
 	case dhcp4.Release, dhcp4.Decline:
 		if h.expireLease(hwAddr) {
-			log.Printf("expired lease for %v", hwAddr)
+			h.log.Printf("expired lease for %v", hwAddr)
 		}
 
 		return nil

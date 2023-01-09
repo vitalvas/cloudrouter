@@ -3,6 +3,7 @@ package dns
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net"
 	"os"
 	"path/filepath"
@@ -11,13 +12,10 @@ import (
 
 	miekgdns "github.com/miekg/dns"
 	"github.com/vitalvas/cloudrouter/lib/general"
-	"github.com/vitalvas/cloudrouter/lib/logger"
 	"github.com/vitalvas/cloudrouter/lib/multilisten"
 )
 
 var (
-	log = logger.NewConsole()
-
 	defaultUpstream = []string{
 		"8.8.8.8", "8.8.4.4", // Google
 		"1.1.1.1", "1.0.0.1", // Cloudflare
@@ -27,6 +25,7 @@ var (
 
 type Server struct {
 	Mux *miekgdns.ServeMux
+	log *log.Logger
 
 	cfg DNS
 
@@ -76,6 +75,10 @@ func (srv *Server) upstreams() []string {
 	copy(result, srv.upstream)
 
 	return result
+}
+
+func (srv *Server) SetLogger(l *log.Logger) {
+	srv.log = l
 }
 
 func (srv *Server) Apply() error {

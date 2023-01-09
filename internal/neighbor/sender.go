@@ -1,7 +1,6 @@
 package neighbor
 
 import (
-	"log"
 	"net"
 	"time"
 
@@ -19,7 +18,7 @@ func (s *Server) sender() {
 	for !s.shutdown {
 		list, err := netlink.LinkList()
 		if err != nil {
-			log.Println("error", err)
+			s.log.Println("error", err)
 			return
 		}
 
@@ -55,7 +54,7 @@ func (s *Server) sendInterfaceNeighborPacket(link *netlink.LinkAttrs) {
 	}
 
 	if err := sendNeighborPacket(link, msg); err != nil {
-		log.Println("err send:", err)
+		s.log.Println("err send:", err)
 	}
 }
 

@@ -20,7 +20,7 @@ func (w *nonBlockingWriter) Write(p []byte) (n int, _ error) {
 	return len(p), nil
 }
 
-func NewConsole() *log.Logger {
+func New() *log.Logger {
 	w := io.Discard
 
 	if console, err := os.OpenFile("/dev/console", os.O_RDWR, 0600); err == nil {

@@ -14,7 +14,7 @@ func (srv *Server) handleRequest(w dns.ResponseWriter, r *dns.Msg) {
 
 		in, _, err := srv.client.Exchange(r, u)
 		if err != nil {
-			log.Printf("resolving %v failed: %v", r.Question, err)
+			srv.log.Printf("resolving %v failed: %v", r.Question, err)
 
 			continue
 		}

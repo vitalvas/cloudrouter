@@ -2,11 +2,14 @@ package neighbor
 
 import (
 	"encoding/binary"
+	"log"
 	"sync"
 	"time"
 )
 
 type Server struct {
+	log *log.Logger
+
 	ID       []byte
 	lock     sync.Mutex
 	shutdown bool
@@ -30,6 +33,10 @@ func (s *Server) Apply() error {
 
 func (s *Server) Shutdown() {
 	s.shutdown = true
+}
+
+func (s *Server) SetLogger(l *log.Logger) {
+	s.log = l
 }
 
 func getMachineID() []byte {

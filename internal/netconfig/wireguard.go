@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net"
 	"os"
 	"path/filepath"
@@ -20,6 +21,7 @@ type WireguardInterfaces struct {
 }
 
 type Wireguard struct {
+	log    *log.Logger
 	client *wgctrl.Client
 	cfg    WireguardInterfaces
 }
@@ -39,8 +41,10 @@ type WireguardPeer struct {
 	PersistentKeepaliveInterval time.Duration `json:"persistent_keepalive_interval"`
 }
 
-func NewWireguard() (*Wireguard, error) {
-	wg := &Wireguard{}
+func NewWireguard(l *log.Logger) (*Wireguard, error) {
+	wg := &Wireguard{
+		log: l,
+	}
 
 	var err error
 
@@ -201,7 +205,7 @@ func (wg *Wireguard) syncInterface(iface WireguardInterface) error {
 func (wg *Wireguard) clean() error {
 	devs, err := wg.client.Devices()
 	if err != nil {
-		log.Fatal(err)
+		wg.log.Fatal(err)
 	}
 
 	var unknownDevices []string
@@ -220,7 +224,7 @@ func (wg *Wireguard) clean() error {
 	}
 
 	for _, row := range unknownDevices {
-		log.Println("deleting", row)
+		wg.log.Println("deleting", row)
 
 		link, err := netlink.LinkByName(row)
 		if err != nil {

@@ -1,13 +1,10 @@
 package multilisten
 
 import (
+	"log"
 	"sync"
 	"time"
-
-	"github.com/vitalvas/cloudrouter/lib/logger"
 )
-
-var log = logger.NewConsole()
 
 type Listener interface {
 	ListenAndServe() error
