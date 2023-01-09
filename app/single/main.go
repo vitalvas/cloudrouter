@@ -7,6 +7,7 @@ import (
 
 	dhcp4server "github.com/vitalvas/cloudrouter/internal/dhcp4-server"
 	"github.com/vitalvas/cloudrouter/internal/dns"
+	"github.com/vitalvas/cloudrouter/internal/loader"
 	"github.com/vitalvas/cloudrouter/internal/neighbor"
 	"github.com/vitalvas/cloudrouter/internal/netconfig"
 	"github.com/vitalvas/cloudrouter/lib/runner"
@@ -25,6 +26,9 @@ func main() {
 
 	case "cloudrouter-dns", "dns":
 		app = dns.NewServer()
+
+	case "cloudrouter-loader", "loader":
+		app = loader.New()
 
 	case "cloudrouter-neighbor", "neighbor":
 		app = neighbor.NewServer()
