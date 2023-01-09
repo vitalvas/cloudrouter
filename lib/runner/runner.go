@@ -2,6 +2,7 @@ package runner
 
 import (
 	"log"
+	"math/rand"
 	"os"
 	"os/signal"
 	"syscall"
@@ -17,6 +18,8 @@ type Runner interface {
 }
 
 func Execute(srv Runner) {
+	rand.Seed(time.Now().UnixNano())
+
 	var log = logger.New()
 
 	srv.SetLogger(log)
