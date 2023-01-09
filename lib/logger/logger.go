@@ -23,16 +23,18 @@ func (w *nonBlockingWriter) Write(p []byte) (n int, _ error) {
 func New() *log.Logger {
 	w := io.Discard
 
-	if console, err := os.OpenFile("/dev/console", os.O_RDWR, 0600); err == nil {
-		ch := make(chan string, 1)
+	if _, skip := os.LookupEnv("CR_LOG_CONSOLE_SKIP"); !skip {
+		if console, err := os.OpenFile("/dev/console", os.O_RDWR, 0600); err == nil {
+			ch := make(chan string, 1)
 
-		go func() {
-			for buf := range ch {
-				console.Write([]byte(buf))
-			}
-		}()
+			go func() {
+				for buf := range ch {
+					console.Write([]byte(buf))
+				}
+			}()
 
-		w = &nonBlockingWriter{W: ch}
+			w = &nonBlockingWriter{W: ch}
+		}
 	}
 
 	return log.New(io.MultiWriter(os.Stderr, w), "", log.LstdFlags|log.Lshortfile)
