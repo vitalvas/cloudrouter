@@ -8,6 +8,7 @@ import (
 	dhcp4server "github.com/vitalvas/cloudrouter/internal/dhcp4-server"
 	"github.com/vitalvas/cloudrouter/internal/dns"
 	"github.com/vitalvas/cloudrouter/internal/neighbor"
+	"github.com/vitalvas/cloudrouter/internal/netconfig"
 	"github.com/vitalvas/cloudrouter/lib/runner"
 )
 
@@ -27,6 +28,9 @@ func main() {
 
 	case "cloudrouter-neighbor", "neighbor":
 		app = neighbor.NewServer()
+
+	case "cloudrouter-netconfig", "netconfig":
+		app = netconfig.NewNetConfig()
 
 	default:
 		log.Fatal("program name recognition error")
