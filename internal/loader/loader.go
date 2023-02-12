@@ -5,7 +5,9 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"os"
 	"sync"
+	"syscall"
 )
 
 var apps = []string{
@@ -17,10 +19,14 @@ type Loader struct {
 	log     *log.Logger
 	token   string
 	runOnce sync.Once
+
+	apps map[string]*os.Process
 }
 
 func New() *Loader {
-	return &Loader{}
+	return &Loader{
+		apps: make(map[string]*os.Process),
+	}
 }
 
 func (lo *Loader) SetLogger(l *log.Logger) {
@@ -42,6 +48,11 @@ func (lo *Loader) Apply() error {
 }
 
 func (lo *Loader) Shutdown() {
+	for name, child := range lo.apps {
+		if err := child.Signal(syscall.SIGINT); err != nil {
+			lo.log.Printf("error shutdown process '%s': %v", name, err)
+		}
+	}
 }
 
 func (lo *Loader) setSessionToken() {

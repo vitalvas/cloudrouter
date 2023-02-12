@@ -1,24 +1,22 @@
 package loader
 
 import (
-	"bytes"
 	"os"
-	"os/exec"
+	"path/filepath"
 )
 
 func (lo *Loader) execute(appPath string) {
-	cmd := exec.Command(appPath)
-
-	cmd.Env = append(os.Environ(), lo.generateEnvData()...)
-
-	var cmdErrors bytes.Buffer
-	cmd.Stderr = &cmdErrors
-
-	if err := cmd.Run(); err != nil {
-		lo.log.Println(err)
+	child, err := os.StartProcess(
+		appPath, nil,
+		&os.ProcAttr{
+			Env: append(os.Environ(), lo.generateEnvData()...),
+		},
+	)
+	if err != nil {
+		lo.log.Fatal(err)
 	}
 
-	if cmdErrors.Len() > 0 {
-		lo.log.Println(cmdErrors.String())
-	}
+	name := filepath.Base(appPath)
+
+	lo.apps[name] = child
 }
