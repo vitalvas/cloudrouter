@@ -6,7 +6,7 @@ require (
 	github.com/digineo/go-ping v1.0.1
 	github.com/google/nftables v0.1.0
 	github.com/krolaw/dhcp4 v0.0.0-20190909130307-a50d88189771
-	github.com/miekg/dns v1.1.50
+	github.com/miekg/dns v1.1.51
 	github.com/vishvananda/netlink v1.1.0
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20221104135756-97bc4ad4a1cb
 	google.golang.org/protobuf v1.28.1
